@@ -1,0 +1,756 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Campus Placement Portal</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #080b18;
+    --panel: rgba(255,255,255,0.07);
+    --purple: #a78bfa;
+    --blue: #38bdf8;
+    --pink: #f472b6;
+    --green: #4ade80;
+    --text: #f8fafc;
+    --muted: #a5b4cc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 15% 20%, #6338c455, transparent 35%),
+        radial-gradient(circle at 85% 80%, #0879b944, transparent 35%);
+    z-index: -2;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    opacity: .15;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px);
+    background-size: 35px 35px;
+    z-index: -1;
+}
+
+.presentation {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    padding: 65px 9%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(45px) scale(.98);
+    transition: opacity .55s ease, transform .55s ease, visibility .55s;
+    overflow-y: auto;
+}
+
+.slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0) scale(1);
+}
+
+.tag {
+    display: inline-block;
+    width: fit-content;
+    color: var(--purple);
+    border: 1px solid #a78bfa66;
+    background: #a78bfa18;
+    padding: 9px 17px;
+    border-radius: 30px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 22px;
+}
+
+h1, h2, h3 {
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+h1 {
+    font-size: clamp(42px, 6vw, 76px);
+    line-height: 1.08;
+    max-width: 950px;
+    margin-bottom: 24px;
+}
+
+h2 {
+    font-size: clamp(30px, 4vw, 48px);
+    margin-bottom: 16px;
+}
+
+h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #a78bfa, #38bdf8, #f472b6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    font-size: 20px;
+    max-width: 700px;
+}
+
+.author {
+    margin-top: 42px;
+    padding-left: 18px;
+    border-left: 3px solid var(--purple);
+    line-height: 1.9;
+    color: #dbeafe;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 30px;
+}
+
+.grid.two {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.card {
+    background: var(--panel);
+    border: 1px solid #ffffff18;
+    border-radius: 18px;
+    padding: 24px;
+    backdrop-filter: blur(12px);
+    transition: .35s ease;
+}
+
+.card:hover {
+    transform: translateY(-7px);
+    border-color: var(--purple);
+    box-shadow: 0 15px 40px #8b5cf633;
+}
+
+.card p {
+    font-size: 14px;
+}
+
+.icon {
+    font-size: 32px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.purple { color: var(--purple); }
+.blue { color: var(--blue); }
+.pink { color: var(--pink); }
+.green { color: var(--green); }
+
+.pill {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 9px;
+    background: #a78bfa20;
+    border: 1px solid #a78bfa55;
+    color: #d8b4fe;
+    font-size: 13px;
+    margin: 5px;
+}
+
+.architecture {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+    max-width: 850px;
+}
+
+.layer {
+    padding: 17px 22px;
+    text-align: center;
+    border-radius: 12px;
+    background: #ffffff0c;
+    border: 1px solid #ffffff25;
+    animation: pulse 3s infinite alternate;
+}
+
+.layer strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--blue);
+}
+
+.arrow {
+    text-align: center;
+    color: var(--purple);
+    font-size: 22px;
+}
+
+.workflow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.step {
+    padding: 18px 12px;
+    text-align: center;
+    border-radius: 14px;
+    background: var(--panel);
+    border: 1px solid #ffffff20;
+    position: relative;
+}
+
+.step span {
+    font-size: 25px;
+    display: block;
+    margin-bottom: 9px;
+}
+
+.step strong {
+    font-size: 14px;
+}
+
+.step small {
+    display: block;
+    color: var(--muted);
+    margin-top: 7px;
+    font-size: 12px;
+}
+
+.formula {
+    margin: 25px 0;
+    padding: 25px;
+    background: linear-gradient(100deg, #7c3aed33, #0284c733);
+    border: 1px solid #a78bfa66;
+    border-radius: 15px;
+    font-size: clamp(20px, 3vw, 30px);
+    font-weight: 800;
+    text-align: center;
+    color: #e9d5ff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ffffff08;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ffffff15;
+}
+
+th {
+    color: var(--blue);
+    background: #38bdf815;
+}
+
+td {
+    color: #dbeafe;
+}
+
+.footer {
+    position: fixed;
+    bottom: 22px;
+    left: 9%;
+    right: 9%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 12px;
+    z-index: 10;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+button {
+    background: #a78bfa22;
+    border: 1px solid #a78bfa88;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+button:hover {
+    background: #8b5cf6;
+}
+
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--purple), var(--blue), var(--pink));
+    width: 0%;
+    transition: .4s;
+    z-index: 20;
+}
+
+.slide-number {
+    color: var(--purple);
+}
+
+ul {
+    margin: 15px 0 0 20px;
+    color: var(--muted);
+    line-height: 2;
+}
+
+@keyframes pulse {
+    from { box-shadow: 0 0 0 #8b5cf600; }
+    to { box-shadow: 0 0 22px #8b5cf622; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+@media(max-width: 750px) {
+    .slide {
+        padding: 45px 6% 85px;
+    }
+    .grid, .grid.two {
+        grid-template-columns: 1fr;
+    }
+    .workflow {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .footer {
+        left: 6%;
+        right: 6%;
+    }
+}
+
+@media(max-height: 650px) {
+    .slide {
+        justify-content: flex-start;
+        padding-top: 35px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="progress" id="progress"></div>
+
+<main class="presentation">
+
+<!-- SLIDE 1 -->
+<section class="slide active">
+    <div class="tag">C++ PROJECT PRESENTATION</div>
+    <h1>
+        DIGITAL CAMPUS<br>
+        <span class="gradient-text">PLACEMENT PORTAL</span>
+    </h1>
+    <p class="subtitle">
+        Bridging students and career opportunities through
+        Object-Oriented Programming and intelligent data structures.
+    </p>
+
+    <div class="author">
+        <strong>Presented By</strong><br>
+        Sanghamitra Moharatha<br>
+        Student ID: B125111<br>
+        CSE B | 3rd Semester<br>
+        IIIT Bhubaneswar
+    </div>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide">
+    <div class="tag">01 / INTRODUCTION</div>
+    <h2>About the <span class="gradient-text">Project</span></h2>
+    <p>
+        Digital Campus Placement Portal is a menu-driven C++ application
+        designed to simulate the campus recruitment process.
+        It connects students, companies, and placement management
+        through a structured digital workflow.
+    </p>
+
+    <div class="grid">
+        <div class="card">
+            <span class="icon">🎓</span>
+            <h3 class="purple">Students</h3>
+            <p>Maintain profiles, academic details and job applications.</p>
+        </div>
+        <div class="card">
+            <span class="icon">🏢</span>
+            <h3 class="blue">Companies</h3>
+            <p>Manage company information and job opportunities.</p>
+        </div>
+        <div class="card">
+            <span class="icon">🏆</span>
+            <h3 class="pink">Placement</h3>
+            <p>Verify eligibility, rank candidates and track results.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="slide">
+    <div class="tag">02 / OBJECTIVES</div>
+    <h2>What are we <span class="gradient-text">solving?</span></h2>
+
+    <div class="grid two">
+        <div class="card">
+            <span class="icon">👨‍🎓</span>
+            <h3>Student Management</h3>
+            <p>Store and manage student details and academic records.</p>
+        </div>
+        <div class="card">
+            <span class="icon">💼</span>
+            <h3>Job Management</h3>
+            <p>Organise companies, job openings and requirements.</p>
+        </div>
+        <div class="card">
+            <span class="icon">✅</span>
+            <h3>Eligibility Verification</h3>
+            <p>Check CGPA, eligible branch and required skills.</p>
+        </div>
+        <div class="card">
+            <span class="icon">📊</span>
+            <h3>Candidate Ranking</h3>
+            <p>Prioritise eligible applicants using a Max-Heap.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="slide">
+    <div class="tag">03 / TECHNOLOGY</div>
+    <h2>Technology <span class="gradient-text">Stack</span></h2>
+    <p>The project combines C++ programming, OOP and STL data structures.</p>
+
+    <div class="grid">
+        <div class="card">
+            <span class="icon">💻</span>
+            <h3 class="blue">C++</h3>
+            <p>Core language used to develop the application.</p>
+        </div>
+        <div class="card">
+            <span class="icon">🧩</span>
+            <h3 class="purple">OOP</h3>
+            <p>Classes, objects, inheritance and polymorphism.</p>
+        </div>
+        <div class="card">
+            <span class="icon">📦</span>
+            <h3 class="green">Vectors</h3>
+            <p>Dynamic storage for students, companies, jobs and applications.</p>
+        </div>
+        <div class="card">
+            <span class="icon">🏔️</span>
+            <h3 class="pink">Max-Heap</h3>
+            <p>Priority-based candidate ranking using priority_queue.</p>
+        </div>
+        <div class="card">
+            <span class="icon">⌨️</span>
+            <h3 class="blue">Console UI</h3>
+            <p>Menu-driven interaction through the terminal.</p>
+        </div>
+        <div class="card">
+            <span class="icon">⚙️</span>
+            <h3 class="purple">STL</h3>
+            <p>Standard Template Library components for data management.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 5 -->
+<section class="slide">
+    <div class="tag">04 / OBJECT-ORIENTED DESIGN</div>
+    <h2>Core OOP <span class="gradient-text">Concepts</span></h2>
+
+    <div class="grid two">
+        <div class="card">
+            <h3 class="purple">🔒 Encapsulation</h3>
+            <p>Combines data and related functions inside classes.</p>
+        </div>
+        <div class="card">
+            <h3 class="blue">🎭 Abstraction</h3>
+            <p>The abstract User class defines a common interface.</p>
+        </div>
+        <div class="card">
+            <h3 class="green">🌳 Inheritance</h3>
+            <p>Student and PlacementOfficer derive from User.</p>
+        </div>
+        <div class="card">
+            <h3 class="pink">🔄 Polymorphism</h3>
+            <p>Virtual functions allow derived classes to provide their own behaviour.</p>
+        </div>
+    </div>
+
+    <div class="formula">
+        User (Abstract Class) → Student | PlacementOfficer
+    </div>
+    <p>Other important classes: Company, JobOpportunity, Application and PlacementPortal.</p>
+</section>
+
+<!-- SLIDE 6 -->
+<section class="slide">
+    <div class="tag">05 / SYSTEM DESIGN</div>
+    <h2>Project <span class="gradient-text">Architecture</span></h2>
+    <p>Four layers work together to execute the placement simulation.</p>
+
+    <div class="architecture">
+        <div class="layer">
+            <strong>01 · PRESENTATION LAYER</strong>
+            Main Menu | Student | Company | Jobs | Results
+        </div>
+        <div class="arrow">↓</div>
+        <div class="layer">
+            <strong>02 · APPLICATION LOGIC LAYER</strong>
+            PlacementPortal | Registration | Eligibility | Ranking
+        </div>
+        <div class="arrow">↓</div>
+        <div class="layer">
+            <strong>03 · CLASS / MODEL LAYER</strong>
+            User | Student | PlacementOfficer | Company | JobOpportunity | Application
+        </div>
+        <div class="arrow">↓</div>
+        <div class="layer">
+            <strong>04 · DATA STRUCTURE LAYER</strong>
+            Vectors | Priority Queue | Max-Heap
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 7 -->
+<section class="slide">
+    <div class="tag">06 / PROCESS SIMULATION</div>
+    <h2>Project <span class="gradient-text">Workflow</span></h2>
+    <p>From student registration to placement result.</p>
+
+    <div class="workflow">
+        <div class="step">
+            <span>🚀</span>
+            <strong>01. Start</strong>
+            <small>Open the main menu</small>
+        </div>
+        <div class="step">
+            <span>👨‍🎓</span>
+            <strong>02. Students</strong>
+            <small>Manage student details</small>
+        </div>
+        <div class="step">
+            <span>🏢</span>
+            <strong>03. Companies</strong>
+            <small>Manage jobs and requirements</small>
+        </div>
+        <div class="step">
+            <span>📝</span>
+            <strong>04. Apply</strong>
+            <small>Submit job application</small>
+        </div>
+        <div class="step">
+            <span>✅</span>
+            <strong>05. Eligibility</strong>
+            <small>Verify requirements</small>
+        </div>
+        <div class="step">
+            <span>🧮</span>
+            <strong>06. Score</strong>
+            <small>Calculate selection score</small>
+        </div>
+        <div class="step">
+            <span>🏆</span>
+            <strong>07. Ranking</strong>
+            <small>Use Max-Heap</small>
+        </div>
+        <div class="step">
+            <span>📊</span>
+            <strong>08. Results</strong>
+            <small>Update application status</small>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 8 -->
+<section class="slide">
+    <div class="tag">07 / DATA STRUCTURE SIMULATION</div>
+    <h2>Max-Heap <span class="gradient-text">Ranking</span></h2>
+    <p>
+        Eligible candidates are prioritised according to their selection scores.
+        A priority queue maintains the highest-priority score at the top.
+    </p>
+
+    <div class="formula">
+        Selection Score = (CGPA × 10) + Skill Test Marks
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>CGPA</th>
+                <th>Skill Marks</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Student A</td><td>9.0</td><td>85</td><td class="green">175</td></tr>
+            <tr><td>Student B</td><td>8.5</td><td>90</td><td class="green">175</td></tr>
+            <tr><td>Student C</td><td>8.0</td><td>75</td><td class="blue">155</td></tr>
+        </tbody>
+    </table>
+    <p style="margin-top:15px;font-size:13px;">
+        *Illustrative data. Equal scores may require an additional tie-breaking rule.
+    </p>
+</section>
+
+<!-- SLIDE 9 -->
+<section class="slide">
+    <div class="tag">08 / CONCLUSION</div>
+    <h2>From Code to <span class="gradient-text">Career Opportunities</span></h2>
+    <p>
+        The Digital Campus Placement Portal demonstrates how C++,
+        Object-Oriented Programming and data structures can be
+        combined to simulate a practical campus placement system.
+    </p>
+
+    <div class="grid">
+        <div class="card">
+            <span class="icon">🧠</span>
+            <h3>Learning</h3>
+            <p>Understanding OOP through a practical application.</p>
+        </div>
+        <div class="card">
+            <span class="icon">⚙️</span>
+            <h3>Implementation</h3>
+            <p>Applying vectors and Max-Heap to manage and rank data.</p>
+        </div>
+        <div class="card">
+            <span class="icon">🚀</span>
+            <h3>Future Scope</h3>
+            <p>Database, authentication, GUI and reporting features.</p>
+        </div>
+    </div>
+
+    <div style="margin-top:45px;">
+        <h2 class="gradient-text">THANK YOU!</h2>
+        <p>Questions & Discussion</p>
+        <p style="margin-top:12px;font-size:13px;">
+            Sanghamitra Moharatha · CSE B · IIIT Bhubaneswar
+        </p>
+    </div>
+</section>
+
+</main>
+
+<div class="footer">
+    <span>DIGITAL CAMPUS PLACEMENT PORTAL</span>
+    <div class="controls">
+        <button onclick="previousSlide()">←</button>
+        <span class="slide-number" id="counter">01 / 09</span>
+        <button onclick="nextSlide()">→</button>
+    </div>
+</div>
+
+<script>
+const slides = document.querySelectorAll(".slide");
+const counter = document.getElementById("counter");
+const progress = document.getElementById("progress");
+
+let current = 0;
+
+function showSlide(index) {
+    slides[current].classList.remove("active");
+
+    current = (index + slides.length) % slides.length;
+
+    slides[current].classList.add("active");
+
+    counter.textContent =
+        String(current + 1).padStart(2, "0") +
+        " / " +
+        String(slides.length).padStart(2, "0");
+
+    progress.style.width =
+        ((current + 1) / slides.length * 100) + "%";
+}
+
+function nextSlide() {
+    showSlide(current + 1);
+}
+
+function previousSlide() {
+    showSlide(current - 1);
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight" || event.key === " ") {
+        nextSlide();
+    }
+
+    if (event.key === "ArrowLeft") {
+        previousSlide();
+    }
+});
+
+let touchStart = 0;
+
+document.addEventListener("touchstart", e => {
+    touchStart = e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend", e => {
+    let touchEnd = e.changedTouches[0].screenX;
+
+    if (touchStart - touchEnd > 60) nextSlide();
+    if (touchEnd - touchStart > 60) previousSlide();
+});
+
+showSlide(0);
+</script>
+
+</body>
+</html>
